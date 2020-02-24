@@ -6,11 +6,16 @@ import {
 function Video(props) {
   let location = useLocation();
   let data = location.state.data
+
+  let url = process.env.NODE_ENV === 'development' ? 
+    `http://localhost:3000/videos/${data.url}` : 
+    `/videos/${data.url}`
+    
   return (
     <>
       <div className="videoItem">
         <div>
-          <video src={`http://localhost:3000/videos/${data.url}`} width="100%" controls={true} autoPlay={true}/>
+          <video src={url} width="100%" controls={true} autoPlay={true}/>
         </div>
         <div className="contentWrapper">
           <div>{data.title}</div>

@@ -14,11 +14,16 @@ function App() {
 
   return (
     <div className="homeWrapper">
-      {videos && videos.map((item, index) => (
-        <div key={index} className="videoItem">
+      {videos && videos.map((item, index) => {
+
+        let url = process.env.NODE_ENV === 'development' ? 
+          `http://localhost:3000/videos/${item.url}` : 
+          `/videos/${item.url}`
+
+        return (<div key={index} className="videoItem">
           <div>
             <video 
-              src={`http://localhost:3000/videos/${item.url}`} 
+              src={`http://localhost:3000/videos/${url}`} 
               width="100%" 
               controls={true} 
               preload={index === 0 ? 'auto' : 'none'}
@@ -36,7 +41,7 @@ function App() {
             <div>{new Date(item.pubDate).toLocaleString()}</div>
           </Link>
         </div>
-      ))}
+      )})}
     </div>
   );
 }
