@@ -1,3 +1,4 @@
+@import '~antd/dist/antd.css';
 .App {
   text-align: center;
 }
@@ -35,4 +36,28 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.videoItem {
+  padding: 1rem 0;
+}
+.homeWrapper {
+  padding: 0 1rem;
+}
+.ant-layout-content {
+  padding: 64px 0 0!important;
+  min-height: calc(100vh - 64px);
+}
+
+.contentWrapper, .ant-layout-header {
+  padding: 0 1rem;
+}
+
+.link {
+  color: #282c34;
+}
+.ant-layout-header {
+  position: fixed;
+  z-index: 999;
+  width: 100%;
 }
