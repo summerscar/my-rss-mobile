@@ -23,7 +23,7 @@ function App() {
         return (<div key={index} className="videoItem">
           <div>
             <video 
-              src={`http://localhost:3000/videos/${url}`} 
+              src={url} 
               width="100%" 
               controls={true} 
               preload={index === 0 ? 'auto' : 'none'}
