@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from "react-router-dom";
+import { Spin } from 'antd';
 
 function App(props) {
   const {videos} = props
   return (
     <div className="homeWrapper">
-      {videos && videos.map((item, index) => {
+      {videos ? videos.map((item, index) => {
 
         let url = `https://myrssvideo.s3.jp-tok.cloud-object-storage.appdomain.cloud/${item.url}`
 
@@ -30,7 +31,7 @@ function App(props) {
             <div  style={{fontSize: '12px'}}>{new Date(item.pubdate).toLocaleString()}</div>
           </Link>
         </div>
-      )})}
+      )}) : <Spin tip="稍等一下哦" size="large"/>}
     </div>
   );
 }
