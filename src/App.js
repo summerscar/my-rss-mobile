@@ -1,33 +1,41 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import { Layout, Icon } from 'antd';
-import {useLocation, Link} from 'react-router-dom'
-const { Header, Content, Footer } = Layout;
+import { Layout } from 'antd';
+import Index from './components/index';
+import Video from './components/video';
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import Header from './components/header'
+import axios from 'axios';
+const { Content, Footer } = Layout;
 
-function App(props) {
-  let location = useLocation();
-  React.useEffect(() => {
-   console.log(location)
-  }, [location]);
-  
+
+function App() {
+  const [videos, setVideos] = useState()
+
+  useEffect(() => {
+    axios.get('/api/youtube/ANNnewsCH').then(res => {
+      console.log(res.data)
+      setVideos(res.data.items)
+    })
+  }, [])
+
   return (
-    <Layout className="layout">
-      <Header>
-        {location.pathname !== '/' ? (
-          <Link
-            to={{pathname: '/'}}
-          >
-             <Icon type="left" style={{fontSize: '20px', color: 'white'}}/>
-          </Link>
-          ) : <div style={{color: 'white'}}>ANN NEWS</div>
-        }
-        
-      </Header>
-      <Content style={{ padding: '0 50px' }}>
-        {props.children}
-      </Content>
-      <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
-    </Layout>
+    <BrowserRouter>
+      <Layout className="layout">
+        <Header></Header>
+        <Content style={{ padding: '0 50px' }}>
+          <Switch>
+            <Route exact path="/">
+              <Index videos={videos} />
+            </Route>
+            <Route path="/video/:title">
+              <Video />
+            </Route>
+          </Switch>
+        </Content>
+        <Footer style={{ textAlign: 'center' }}>ANN News by <a href="https://github.com/summerscar/my-rss-node">summerscar</a></Footer>
+      </Layout>
+    </BrowserRouter>
   );
 }
 

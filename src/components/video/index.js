@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
   useLocation
 } from "react-router-dom";
@@ -7,20 +7,18 @@ function Video(props) {
   let location = useLocation();
   let data = location.state.data
 
-  let url = process.env.NODE_ENV === 'development' ? 
-    `http://localhost:3000/videos/${data.url}` : 
-    `/videos/${data.url}`
+  let url = `https://myrssvideo.s3.jp-tok.cloud-object-storage.appdomain.cloud/${data.url}`
     
   return (
     <>
-      <div className="videoItem">
+      <div>
         <div>
           <video src={url} width="100%" controls={true} autoPlay={true}/>
         </div>
         <div className="contentWrapper">
-          <div>{data.title}</div>
-          <div>{new Date(data.pubDate).toLocaleString()}</div>
-          <div>{data.contentSnippet}</div>
+          <div style={{fontSize: '14px', fontWeight: 'bold'}}>{data.title}</div>
+          <div style={{fontSize: '12px', textAlign: 'right'}}>{new Date(data.pubdate).toLocaleString()}</div>
+          <div style={{paddingTop: '1rem'}}>{data.contentsnippet}</div>
         </div>
       </div>
     </>

@@ -1,24 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import { Link } from "react-router-dom";
-import axios from 'axios';
 
-function App() {
-  const [videos, setVideos] = useState()
-
-  useEffect(() => {
-    axios.get('/api/youtube/ANNnewsCH').then(res => {
-      console.log(res.data)
-      setVideos(res.data.items)
-    })
-  }, [])
-
+function App(props) {
+  const {videos} = props
   return (
     <div className="homeWrapper">
       {videos && videos.map((item, index) => {
 
-        let url = process.env.NODE_ENV === 'development' ? 
-          `http://localhost:3000/videos/${item.url}` : 
-          `/videos/${item.url}`
+        let url = `https://myrssvideo.s3.jp-tok.cloud-object-storage.appdomain.cloud/${item.url}`
 
         return (<div key={index} className="videoItem">
           <div>
@@ -38,7 +27,7 @@ function App() {
             }}
           >
             {item.title}
-            <div>{new Date(item.pubDate).toLocaleString()}</div>
+            <div  style={{fontSize: '12px'}}>{new Date(item.pubdate).toLocaleString()}</div>
           </Link>
         </div>
       )})}
