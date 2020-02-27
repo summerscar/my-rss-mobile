@@ -10,14 +10,17 @@ const { Content, Footer } = Layout;
 
 
 function App() {
-  const [videos, setVideos] = useState()
-
+  const [videos, setVideos] = useState([])
+  const [offset, setOffset] = useState(0)
+  const [isloading, setIsloading] = useState(false)
   useEffect(() => {
-    axios.get('/api/youtube/ANNnewsCH').then(res => {
+    setIsloading(true)
+    axios.get(`/api/youtube/ANNnewsCH?offset=${offset}`).then(res => {
       console.log(res.data)
-      setVideos(res.data.items)
+      setVideos([...videos, ...res.data.items])
+      setIsloading(false)
     })
-  }, [])
+  }, [offset])
 
   return (
     <BrowserRouter>
@@ -26,7 +29,7 @@ function App() {
         <Content style={{ padding: '0 50px' }}>
           <Switch>
             <Route exact path="/">
-              <Index videos={videos} />
+              <Index videos={videos} more={() => setOffset(offset + 8)} isloading={isloading}/>
             </Route>
             <Route path="/video/:title">
               <Video />

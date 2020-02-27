@@ -1,19 +1,16 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import { Spin } from 'antd';
+import { Spin, Button } from 'antd';
 
 function App(props) {
-  const {videos} = props
+  const {videos, isloading} = props
   return (
     <div className="homeWrapper">
-      {videos ? videos.map((item, index) => {
-
-        let url = `https://myrssvideo.s3.jp-tok.cloud-object-storage.appdomain.cloud/${item.url}`
-
+      {videos.length ? videos.map((item, index) => {
         return (<div key={index} className="videoItem">
           <div>
             <video 
-              src={url} 
+              src={item.url} 
               width="100%" 
               controls={true} 
               preload={index === 0 ? 'auto' : 'none'}
@@ -31,7 +28,12 @@ function App(props) {
             <div  style={{fontSize: '12px'}}>{new Date(item.pubdate).toLocaleString()}</div>
           </Link>
         </div>
-      )}) : <Spin tip="稍等一下哦" size="large"/>}
+      )}) : <div className="loading"><Spin tip="稍等一下哦" size="large"/></div>}
+      {videos.length > 0 && (
+        <Button shape="round" block onClick={props.more}>
+          更多 {isloading && <Spin size="small" style={{paddingLeft: '0.5rem'}}/>}
+        </Button>
+      )}
     </div>
   );
 }

@@ -52,7 +52,10 @@
 .contentWrapper, .ant-layout-header {
   padding: 0 1rem;
 }
-
+.contentWrapper {
+  height: calc(100vh - 64px - 69px - 9 / 16 * 100vw);
+  overflow: auto;
+}
 .link {
   color: #282c34;
 }
@@ -61,9 +64,13 @@
   z-index: 999;
   width: 100%;
 }
-.ant-spin-spinning {
+.loading {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translateX(-50%);
+}
+.videoWrapper {
+  display: flex;
+  flex-direction: column;
 }
