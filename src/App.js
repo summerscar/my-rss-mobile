@@ -3,33 +3,52 @@ import './App.css';
 import { Layout } from 'antd';
 import Index from './components/index';
 import Video from './components/video';
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import Header from './components/header'
 import axios from 'axios';
+import AUTHCallback from "./page/AUTHCALLBACK";
+import {useAuth} from 'react-use-auth'
+const OFFSET = 4
 const { Content, Footer } = Layout;
 
-
-function App() {
+function App(props) {
+  const accessToken = localStorage.getItem('accessToken')
   const [videos, setVideos] = useState([])
   const [offset, setOffset] = useState(0)
   const [isloading, setIsloading] = useState(false)
-  useEffect(() => {
-    setIsloading(true)
-    axios.get(`/api/youtube/ANNnewsCH?offset=${offset}`).then(res => {
-      console.log(res.data)
-      setVideos([...videos, ...res.data.items])
-      setIsloading(false)
-    })
-  }, [offset])
+  const { authResult } = useAuth();
 
+  useEffect(() => {
+      if (accessToken) {
+        setIsloading(true)
+        axios.get(`/api/auth/youtube/ANNnewsCH?offset=${offset}`, {headers: {Authorization: `Bearer ${accessToken}`}}).then(res => {
+          console.log(res.data)
+          setVideos(videos => [...videos, ...res.data.items])
+          setIsloading(false)
+        })
+      } else {
+        if (!authResult) {
+          setIsloading(true)
+          axios.get(`/api/youtube/ANNnewsCH`).then(res => {
+            console.log(res.data)
+            setVideos(res.data.items)
+            setIsloading(false)
+          })
+        } 
+      }
+    }, [offset])
+
+    useEffect(() => {
+      authResult && localStorage.setItem('accessToken', authResult.accessToken)
+    }, [authResult])
   return (
-    <BrowserRouter>
+    <>
       <Layout className="layout">
         <Header></Header>
         <Content style={{ padding: '0 50px' }}>
           <Switch>
             <Route exact path="/">
-              <Index videos={videos} more={() => setOffset(offset + 8)} isloading={isloading}/>
+              <Index videos={videos} more={() => setOffset(offset => offset + OFFSET)} isloading={isloading}/>
             </Route>
             <Route path="/video/:title">
               <Video />
@@ -38,7 +57,8 @@ function App() {
         </Content>
         <Footer style={{ textAlign: 'center' }}>ANN News by <a href="https://github.com/summerscar/my-rss-node">summerscar</a></Footer>
       </Layout>
-    </BrowserRouter>
+      <Route path="/auth0_callback" component={AUTHCallback} />
+    </>  
   );
 }
 

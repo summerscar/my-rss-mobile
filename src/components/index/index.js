@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { Spin, Button } from 'antd';
+import {useAuth} from 'react-use-auth'
 
 function App(props) {
+  const { isAuthenticated, login } = useAuth();
   const {videos, isloading} = props
+
   return (
     <div className="homeWrapper">
       {videos.length ? videos.map((item, index) => {
@@ -28,10 +31,14 @@ function App(props) {
             <div  style={{fontSize: '12px'}}>{new Date(item.pubdate).toLocaleString()}</div>
           </Link>
         </div>
-      )}) : <div className="loading"><Spin tip="稍等一下哦" size="large"/></div>}
+      )}) : 
+        isloading ? 
+          <div className="loading"><Spin tip="稍等一下哦" size="large"/></div> 
+          : null}
       {videos.length > 0 && (
-        <Button shape="round" block onClick={props.more}>
-          更多 {isloading && <Spin size="small" style={{paddingLeft: '0.5rem'}}/>}
+        <Button shape="round" block onClick={ isAuthenticated() ? props.more : login }>
+          更多 
+          {isloading && <Spin size="small" style={{paddingLeft: '0.5rem'}}/>}
         </Button>
       )}
     </div>
