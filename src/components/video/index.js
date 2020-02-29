@@ -87,7 +87,7 @@ function Video(props) {
               翻译
               {isloading && <Spin size="small" style={{paddingLeft: '0.5rem'}}/>}
             </Button>
-            <Dropdown overlay={menu}>
+            <Dropdown overlay={menu} trigger={['click']}>
               <Button size="small" style={{marginLeft: '0.2rem'}}>
                 振り仮名  {isAnotherloading && <Spin size="small" style={{paddingLeft: '0.5rem'}}/>}
               </Button>
