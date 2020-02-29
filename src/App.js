@@ -5,23 +5,22 @@ import Index from './components/index';
 import Video from './components/video';
 import { Route, Switch } from "react-router-dom";
 import Header from './components/header'
-import axios from 'axios';
+import axios from './utils/requset';
 import AUTHCallback from "./page/AUTHCALLBACK";
 import {useAuth} from 'react-use-auth'
 const OFFSET = 4
 const { Content, Footer } = Layout;
 
 function App(props) {
-  const accessToken = localStorage.getItem('accessToken')
   const [videos, setVideos] = useState([])
   const [offset, setOffset] = useState(0)
   const [isloading, setIsloading] = useState(false)
-  const { authResult } = useAuth();
+  const { authResult, isAuthenticated } = useAuth();
 
   useEffect(() => {
-      if (accessToken) {
+      if (isAuthenticated()) {
         setIsloading(true)
-        axios.get(`/api/auth/youtube/ANNnewsCH?offset=${offset}`, {headers: {Authorization: `Bearer ${accessToken}`}}).then(res => {
+        axios.get(`/api/auth/youtube/ANNnewsCH?offset=${offset}`).then(res => {
           console.log(res.data)
           setVideos(videos => [...videos, ...res.data.items])
           setIsloading(false)
