@@ -18,6 +18,9 @@ const NewHeader = () => {
           to={{ pathname: '/' }}
         >
           <Icon type="left" style={{ fontSize: '20px', color: 'white' }} />
+          <div style={{display: 'inline', float: 'right'}}>
+            <Login/>
+          </div>
         </Link>
       ) : <div style={{ color: 'white' }}>
         ANN NEWS

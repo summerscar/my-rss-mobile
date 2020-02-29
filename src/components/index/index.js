@@ -12,7 +12,8 @@ function App(props) {
       {videos.length ? videos.map((item, index) => {
         return (<div key={index} className="videoItem">
           <div>
-            <video 
+            <video
+              className="videoRadius"
               src={item.url} 
               width="100%" 
               controls={true} 

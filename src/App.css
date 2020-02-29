@@ -79,3 +79,7 @@ rt {
   font-size: 12px;
   color: blue;
 }
+
+.videoRadius {
+  border-radius: 6px;
+}
