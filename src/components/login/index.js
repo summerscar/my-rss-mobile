@@ -1,12 +1,16 @@
-import React from 'react'
+import React, {useContext, useEffect} from 'react'
 import { Button, ActivityIndicator } from 'antd-mobile';
 import { useAuth } from "react-use-auth";
-
+import { AppContext } from '../../context';
 
 const Login = () => {
-  const { isAuthenticated, login, authResult } = useAuth();
+  const { isAuthenticated, login, authResult, user } = useAuth();
+  const { setData } = useContext(AppContext);
   console.log('user: ', authResult)
 
+  useEffect(() => {
+    setData('user', user)
+  }, [user])
   
   if (isAuthenticated()) {
     return (

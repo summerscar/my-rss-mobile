@@ -41,7 +41,7 @@ function App(props) {
             // onClick={() => watched(item.id, item.title)}
           >
             {item.title}
-            <div  style={{fontSize: '12px'}}>{dayjs(item.pubdate).format('YY/MM/DD HH:mm')}</div>
+            <div  style={{fontSize: '12px'}}>{dayjs(item.pubdate).format('YYYY/MM/DD HH:mm')}</div>
           </Link>
         </div>
       )}) : 

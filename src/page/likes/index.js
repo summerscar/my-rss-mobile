@@ -1,16 +1,16 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { List } from 'antd-mobile';
-import { useAuth } from "react-use-auth";
 import dayjs from 'dayjs'
 import { withRouter } from "react-router-dom";
+import { AppContext } from '../../context';
 
 const Item = List.Item;
 
 function Likes(props) {
-  const { user } = useAuth();
-  const likes = user && 
-                user['https://dev-ymyh-0n9:auth0:com/user_metadata'] && 
-                user['https://dev-ymyh-0n9:auth0:com/user_metadata'].likes
+  const { user } = useContext(AppContext);
+  let likes = user && 
+      ((user['https://dev-ymyh-0n9:auth0:com/user_metadata'] && user['https://dev-ymyh-0n9:auth0:com/user_metadata'].likes) || 
+      (user.user_metadata && user.user_metadata.likes))
 
   return (
     <div className="likes">

@@ -14,7 +14,7 @@ const Header = (props) => {
     <NavBar
       mode="dark"
       icon={location.pathname === '/' ? <Icon key="1" type="ellipsis" /> : <Icon type="left" />}
-      onLeftClick={location.pathname === '/' ? props.openDock : () => props.history.push('/')}
+      onLeftClick={location.pathname === '/' ? props.openDock : () => props.history.goBack()}
       rightContent={[
         <Login key="0"/>
       ]}

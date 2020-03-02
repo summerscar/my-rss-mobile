@@ -1,31 +1,34 @@
-import React, {useState, useEffect} from 'react';
-import { Button, Popover, Toast  } from 'antd-mobile';
+import React, {useState, useEffect, useContext} from 'react';
+import { Button, Popover, ActivityIndicator  } from 'antd-mobile';
 import axios from './../../utils/requset';
 import { useLocation, useParams } from "react-router-dom";
 import { useAuth } from "react-use-auth";
 import dayjs from 'dayjs'
+import { AppContext } from '../../context';
 
 const Item = Popover.Item;
 function Video(props) {
+  const { user, setData } = useContext(AppContext);
+
   let location = useLocation();
   let [translation, setTranslation] = useState()
   const { id } = useParams()
-  let [data, setData] = useState(location.state && location.state.data)
+  let [videoData, setVideoData] = useState(location.state && location.state.videoData)
 
   let [isloading, setIsloading] = useState(false)
   let [isAnotherloading, setIsAnotherloading] = useState(false)
   let [isAnanotherloading, setIsAnanotherloading] = useState(false)
   let [furigana, setFrigana] = useState()
   let [visiable, setVisiable] = useState(false)
-  let { userId, user } = useAuth();
+  let { userId } = useAuth();
 
-  let [likes, setLikes] = useState(user && 
-              user['https://dev-ymyh-0n9:auth0:com/user_metadata'] && 
-              user['https://dev-ymyh-0n9:auth0:com/user_metadata'].likes)
+  let likes = user && 
+      ((user['https://dev-ymyh-0n9:auth0:com/user_metadata'] && user['https://dev-ymyh-0n9:auth0:com/user_metadata'].likes) || 
+      (user.user_metadata && user.user_metadata.likes))
 
   function getTranslate () {
     setIsloading(true)
-    axios.post(`/api/auth/translate`, { content: data.contentsnippet })
+    axios.post(`/api/auth/translate`, { content: videoData.contentsnippet })
       .then(res => {
         setTranslation(res.data.result)
         setIsloading(false)
@@ -35,21 +38,22 @@ function Video(props) {
       })
   }
   useEffect(() => {
-    if (data) return
+    if (videoData) return
     axios.get(`/api/auth/videoSearch/${id}`)
       .then(res => {
-        setData(res.data)
+        setVideoData(res.data)
       }).catch(e => {
         console.log(e)
       })
   }, [])
+
   function getfurigana (grade) {
     if (grade === '0') {
       setFrigana(null)
       return
     }
     setIsAnotherloading(true)
-    axios.post(`/api/auth/furigana`, { content: data.contentsnippet, grade })
+    axios.post(`/api/auth/furigana`, { content: videoData.contentsnippet, grade })
       .then(res => {
         setFrigana(
           res.data.WordList.Word.map((item, index) => (
@@ -67,11 +71,10 @@ function Video(props) {
   }
   function like () {
     setIsAnanotherloading(true)
-    axios.post(`/api/auth/like`, { id: data.id, userId, title: data.title})
+    axios.post(`/api/auth/like`, { id: videoData.id, userId, title: videoData.title})
       .then(res => {
-        setLikes(res.data && 
-          res.data.user_metadata && 
-          res.data.user_metadata.likes)
+        setData('user', res.data)
+
         setIsAnanotherloading(false)
         // Toast.info('成功')
       }).catch(e => {
@@ -79,17 +82,7 @@ function Video(props) {
         setIsAnanotherloading(false)
       })
   }
-  // function getMecab () {
-  //   setIsAnotherloading(true)
-  //   axios.post(`/api/auth/mecab`, { content: data.contentsnippet })
-  //     .then(res => {
-  //       setTranslation(res.data.result.join(' · '))
-  //       setIsAnotherloading(false)
-  //     }).catch(e => {
-  //       console.log(e)
-  //       setIsAnotherloading(false)
-  //     })
-  // }
+
   function handleMenuClick (value) {
     getfurigana(value.key)
     setVisiable(!visiable)
@@ -108,17 +101,17 @@ function Video(props) {
     </>
   );
 
-  return (!!data ?
+  return (videoData ?
     (<div className="videoWrapper">
       <div>
-        <video src={data.url} width="100%" controls={true} autoPlay={true}/>
+        <video src={videoData.url} width="100%" controls={true} autoPlay={true}/>
       </div>
       <div className="contentWrapper">
-        <div style={{fontSize: '14px', fontWeight: 'bold'}}>{data.title}</div>
+        <div style={{fontSize: '14px', fontWeight: 'bold'}}>{videoData.title}</div>
         <div style={{display: 'flex', justifyContent: 'space-between'}}>
           <div style={{display: 'flex'}}>
             <Button size="small" onClick={like} loading={isAnanotherloading} inline>
-              {likes && likes.find(item => item.id === data.id) ? '已收藏' : '收藏'}
+              {likes && likes.find(item => item.id === videoData.id) ? '已收藏' : '收藏'}
             </Button>
             <Button size="small" style={{marginLeft: '0.5rem'}} onClick={getTranslate} loading={isloading} inline>
               翻译
@@ -139,17 +132,17 @@ function Video(props) {
                 振り仮名
               </Button>
             </Popover>
-            {/* <Button size="small" onClick={getMecab} style={{marginLeft: '0.2rem'}}>
-              分词
-              {isAnotherloading && <Spin size="small" style={{paddingLeft: '0.5rem'}}/>}
-            </Button> */}
           </div>
-          <div style={{fontSize: '12px', lineHeight: '30px'}}>{dayjs(data.pubdate).format('YY/MM/DD HH:mm')}</div>
+          <div style={{fontSize: '12px', lineHeight: '30px'}}>{dayjs(videoData.pubdate).format('YYYY/MM/DD HH:mm')}</div>
         </div>
-        <div style={{paddingTop: '1rem'}}>{furigana || data.contentsnippet}</div>
+        <div style={{paddingTop: '1rem'}}>{furigana || videoData.contentsnippet}</div>
         <div style={{paddingTop: '1rem'}}>{translation}</div>
       </div>
-    </div>) : null
+    </div>) :  
+    <div className="loading">
+      <ActivityIndicator size="large"/>
+      <span>稍等一下哦</span>
+    </div>
   );
 }
 

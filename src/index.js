@@ -5,6 +5,7 @@ import App from './App';
 import { BrowserRouter, withRouter } from "react-router-dom";
 import { AuthProvider } from "react-use-auth";
 import * as serviceWorker from './serviceWorker';
+import { AppContextProvider } from '../src/context';
 
 const Provide = withRouter((props) => (
   <AuthProvider
@@ -20,7 +21,9 @@ const Provide = withRouter((props) => (
 
 ReactDOM.render(
   <BrowserRouter>
-    <Provide/>
+    <AppContextProvider>
+      <Provide/>
+    </AppContextProvider>
   </BrowserRouter>
 , document.getElementById('root'));
 
