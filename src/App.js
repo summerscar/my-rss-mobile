@@ -15,7 +15,7 @@ function App(props) {
   const [videos, setVideos] = useState([])
   const [offset, setOffset] = useState(0)
   const [isloading, setIsloading] = useState(false)
-  const { authResult, isAuthenticated, logout } = useAuth();
+  const { authResult, isAuthenticated, logout, login } = useAuth();
   const [docked, setDocked] = useState(false)
 
   useEffect(() => {
@@ -51,7 +51,7 @@ function App(props) {
       {
         isAuthenticated() ? 
           <List.Item onClick={logoutAction}>注销</List.Item> : 
-          <List.Item>登录</List.Item>
+          <List.Item onClick={login}>登录</List.Item>
       }
       <List.Item>收藏夹</List.Item>
   </List>);
