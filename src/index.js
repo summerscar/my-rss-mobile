@@ -12,6 +12,7 @@ const Provide = withRouter((props) => (
     auth0_domain="dev-ymyh-0n9.auth0.com"
     auth0_client_id="U9Ypez6umr0NvVSRxPfcTwEgj8WGIz6p"
     auth0_language="zh"
+    auth0_params={{scope: 'openid profile email read:current_user update:current_user_metadata create:current_user_metadata'}}
   >
     <App/>
   </AuthProvider>

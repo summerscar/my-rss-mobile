@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import Index from './components/index';
 import Video from './components/video';
-import { Route, Switch } from "react-router-dom";
+import Likes from './page/likes'
+import { Route, Switch, withRouter } from "react-router-dom";
 import Header from './components/header'
 import axios from './utils/requset';
 import AUTHCallback from "./page/AUTHCALLBACK";
@@ -46,14 +47,16 @@ function App(props) {
     localStorage.removeItem('accessToken')
     logout()
   }
-
+  function toLikes () {
+    props.history.push('/likes')
+    setDocked(false)
+  }
   const sidebar = (<List>
+      {!(isAuthenticated()) && <List.Item onClick={login}>登录</List.Item>}
+      <List.Item onClick={toLikes}>收藏夹</List.Item>
       {
-        isAuthenticated() ? 
-          <List.Item onClick={logoutAction}>注销</List.Item> : 
-          <List.Item onClick={login}>登录</List.Item>
+        isAuthenticated() && <List.Item onClick={logoutAction}>注销</List.Item> 
       }
-      <List.Item>收藏夹</List.Item>
   </List>);
   
   return (
@@ -78,6 +81,9 @@ function App(props) {
             <Route path="/video/:id">
               <Video />
             </Route>
+            <Route path="/likes">
+              <Likes />
+            </Route>
           </Switch>
         </div>
         <div className="footer" style={{ textAlign: 'center' }}>ANN News by <a href="https://github.com/summerscar/my-rss-node">summerscar</a></div>
@@ -87,4 +93,4 @@ function App(props) {
   );
 }
 
-export default App;
+export default withRouter(App);

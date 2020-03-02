@@ -2,10 +2,21 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { Button, ActivityIndicator } from 'antd-mobile';
 import {useAuth} from 'react-use-auth'
+import axios from './../../utils/requset'
+import dayjs from 'dayjs'
 
 function App(props) {
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated, login, userId } = useAuth();
   const {videos, isloading} = props
+
+  function watched (id, title) {
+    axios.post(`/api/auth/watched`, { id, userId, title})
+      .then(res => {
+        console.log(res)
+      }).catch(e => {
+        console.log(e)
+      })
+  }
 
   return (
     <div className="homeWrapper">
@@ -27,9 +38,10 @@ function App(props) {
               pathname: "/video/" + item.id,
               state: { data: item }
             }}
+            // onClick={() => watched(item.id, item.title)}
           >
             {item.title}
-            <div  style={{fontSize: '12px'}}>{new Date(item.pubdate).toLocaleString()}</div>
+            <div  style={{fontSize: '12px'}}>{dayjs(item.pubdate).format('YY/MM/DD HH:mm')}</div>
           </Link>
         </div>
       )}) : 

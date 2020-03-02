@@ -1,17 +1,23 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Button, Popover  } from 'antd-mobile';
 import axios from './../../utils/requset';
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
+import { useAuth } from "react-use-auth";
+import dayjs from 'dayjs'
 
 const Item = Popover.Item;
 function Video(props) {
   let location = useLocation();
   let [translation, setTranslation] = useState()
-  let data = location.state.data
+  const { id } = useParams()
+  let [data, setData] = useState(location.state && location.state.data)
+
   let [isloading, setIsloading] = useState(false)
   let [isAnotherloading, setIsAnotherloading] = useState(false)
   let [furigana, setFrigana] = useState()
   let [visiable, setVisiable] = useState(false)
+  const { userId } = useAuth();
+
   function getTranslate () {
     setIsloading(true)
     axios.post(`/api/auth/translate`, { content: data.contentsnippet })
@@ -23,7 +29,15 @@ function Video(props) {
         setIsloading(false)
       })
   }
-
+  useEffect(() => {
+    if (data) return
+    axios.get(`/api/auth/videoSearch/${id}`)
+      .then(res => {
+        setData(res.data)
+      }).catch(e => {
+        console.log(e)
+      })
+  }, [])
   function getfurigana (grade) {
     if (grade === '0') {
       setFrigana(null)
@@ -46,7 +60,14 @@ function Video(props) {
         setIsAnotherloading(false)
       })
   }
-
+  function like () {
+    axios.post(`/api/auth/like`, { id: data.id, userId, title: data.title})
+      .then(res => {
+        console.log(res)
+      }).catch(e => {
+        console.log(e)
+      })
+  }
   // function getMecab () {
   //   setIsAnotherloading(true)
   //   axios.post(`/api/auth/mecab`, { content: data.contentsnippet })
@@ -76,8 +97,8 @@ function Video(props) {
     </>
   );
 
-  return (
-    <div className="videoWrapper">
+  return (!!data ?
+    (<div className="videoWrapper">
       <div>
         <video src={data.url} width="100%" controls={true} autoPlay={true}/>
       </div>
@@ -85,7 +106,10 @@ function Video(props) {
         <div style={{fontSize: '14px', fontWeight: 'bold'}}>{data.title}</div>
         <div style={{display: 'flex', justifyContent: 'space-between'}}>
           <div style={{display: 'flex'}}>
-            <Button size="small" onClick={getTranslate} loading={isloading} inline>
+            <Button size="small" onClick={like} loading={isloading} inline>
+              收藏
+            </Button>
+            <Button size="small" style={{marginLeft: '0.5rem'}} onClick={getTranslate} loading={isloading} inline>
               翻译
             </Button>
             <Popover
@@ -109,12 +133,12 @@ function Video(props) {
               {isAnotherloading && <Spin size="small" style={{paddingLeft: '0.5rem'}}/>}
             </Button> */}
           </div>
-          <div style={{fontSize: '12px', lineHeight: '30px'}}>{new Date(data.pubdate).toLocaleString()}</div>
+          <div style={{fontSize: '12px', lineHeight: '30px'}}>{dayjs(data.pubdate).format('YY/MM/DD HH:mm')}</div>
         </div>
         <div style={{paddingTop: '1rem'}}>{furigana || data.contentsnippet}</div>
         <div style={{paddingTop: '1rem'}}>{translation}</div>
       </div>
-    </div>
+    </div>) : null
   );
 }
 
