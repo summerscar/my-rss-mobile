@@ -13,7 +13,7 @@ function Video(props) {
   let location = useLocation();
   let [translation, setTranslation] = useState()
   const { id } = useParams()
-  let [videoData, setVideoData] = useState(location.state && location.state.videoData)
+  let [videoData, setVideoData] = useState(location.state && location.state.data)
 
   let [isloading, setIsloading] = useState(false)
   let [isAnotherloading, setIsAnotherloading] = useState(false)
