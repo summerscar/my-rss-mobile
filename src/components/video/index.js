@@ -113,7 +113,7 @@ function Video(props) {
             <Button size="small" onClick={like} loading={isAnanotherloading} inline>
               {likes && likes.find(item => item.id === videoData.id) ? '已收藏' : '收藏'}
             </Button>
-            <Button size="small" style={{marginLeft: '0.5rem'}} onClick={getTranslate} loading={isloading} inline>
+            <Button size="small" style={{marginLeft: '0.4rem'}} onClick={getTranslate} loading={isloading} inline>
               翻译
             </Button>
             <Popover
@@ -128,12 +128,12 @@ function Video(props) {
               onVisibleChange={() => setVisiable(!visiable)}
               onSelect={handleMenuClick}
             >
-              <Button size="small" style={{marginLeft: '0.5rem'}} loading={isAnotherloading} inline>
+              <Button size="small" style={{marginLeft: '0.4rem'}} loading={isAnotherloading} inline>
                 振り仮名
               </Button>
             </Popover>
           </div>
-          <div style={{fontSize: '12px', lineHeight: '30px'}}>{dayjs(videoData.pubdate).format('YYYY/MM/DD HH:mm')}</div>
+          <div style={{fontSize: '12px', lineHeight: '30px'}}>{dayjs(videoData.pubdate).format('MM/DD HH:mm')}</div>
         </div>
         <div style={{paddingTop: '1rem'}}>{furigana || videoData.contentsnippet}</div>
         <div style={{paddingTop: '1rem'}}>{translation}</div>
