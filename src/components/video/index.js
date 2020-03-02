@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Popover  } from 'antd-mobile';
+import { Button, Popover, Toast  } from 'antd-mobile';
 import axios from './../../utils/requset';
 import { useLocation, useParams } from "react-router-dom";
 import { useAuth } from "react-use-auth";
@@ -14,9 +14,14 @@ function Video(props) {
 
   let [isloading, setIsloading] = useState(false)
   let [isAnotherloading, setIsAnotherloading] = useState(false)
+  let [isAnanotherloading, setIsAnanotherloading] = useState(false)
   let [furigana, setFrigana] = useState()
   let [visiable, setVisiable] = useState(false)
-  const { userId } = useAuth();
+  let { userId, user } = useAuth();
+
+  let [likes, setLikes] = useState(user && 
+              user['https://dev-ymyh-0n9:auth0:com/user_metadata'] && 
+              user['https://dev-ymyh-0n9:auth0:com/user_metadata'].likes)
 
   function getTranslate () {
     setIsloading(true)
@@ -61,11 +66,17 @@ function Video(props) {
       })
   }
   function like () {
+    setIsAnanotherloading(true)
     axios.post(`/api/auth/like`, { id: data.id, userId, title: data.title})
       .then(res => {
-        console.log(res)
+        setLikes(res.data && 
+          res.data.user_metadata && 
+          res.data.user_metadata.likes)
+        setIsAnanotherloading(false)
+        // Toast.info('成功')
       }).catch(e => {
         console.log(e)
+        setIsAnanotherloading(false)
       })
   }
   // function getMecab () {
@@ -106,8 +117,8 @@ function Video(props) {
         <div style={{fontSize: '14px', fontWeight: 'bold'}}>{data.title}</div>
         <div style={{display: 'flex', justifyContent: 'space-between'}}>
           <div style={{display: 'flex'}}>
-            <Button size="small" onClick={like} loading={isloading} inline>
-              收藏
+            <Button size="small" onClick={like} loading={isAnanotherloading} inline>
+              {likes && likes.find(item => item.id === data.id) ? '已收藏' : '收藏'}
             </Button>
             <Button size="small" style={{marginLeft: '0.5rem'}} onClick={getTranslate} loading={isloading} inline>
               翻译
