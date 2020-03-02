@@ -13,6 +13,28 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+:root {
+  --ifm-navbar-height: 96px;
+  --ifm-color-primary: #1890ff;
+  --ifm-color-primary-dark: #157ee0;
+  --ifm-color-primary-darker: #166dbe;
+  --ifm-color-primary-darkest: #166cbd;
+  --ifm-color-primary-light: #2192fc;
+  --ifm-color-primary-lighter: #3ea0fc;
+  --ifm-color-primary-lightest: #5eaffc;
+  --ifm-navbar-link-color: #f2f2f2;
+  --ifm-navbar-link-hover-color: #81D3F8;
+  --ifm-menu-color-active: #3669a6;
+  --ifm-navbar-link-hover-color: #3669a6;
+  --ifm-navbar-background-color: #ffffff;
+  /* --  ifm-container-width: 1440px; */
+  --font-color-title: #1F1F1F;
+  --font-color-body: #666666;
+  --font-color-caption: #999999;
+  --font-color-disable: #DBDBDB;
+  --font-color-link: #2964aa;
+  --font-color-no: #e0e0e0;
+}
 
 .App-header {
   background-color: #282c34;
@@ -38,17 +60,34 @@
   }
 }
 
+.layout {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  min-height: 0;
+  background: #f0f2f5;
+  overflow: auto;
+}
+.footer {
+  padding: 24px 50px;
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+  background: #f0f2f5;
+  flex: 0 0 auto;
+}
 .videoItem {
   padding: 1rem 0;
 }
 .homeWrapper {
   padding: 0 1rem;
 }
-.ant-layout-content {
-  padding: 64px 0 0!important;
-  min-height: calc(100vh - 64px);
+.indexWrapper {
+  flex: 1 0;
+  padding-top: 45px;
 }
-
+.am-drawer {
+  top: 45px;
+}
 .contentWrapper, .ant-layout-header {
   padding: 0 1rem;
 }
@@ -59,9 +98,9 @@
 .link {
   color: #282c34;
 }
-.ant-layout-header {
+.am-navbar {
   position: fixed;
-  z-index: 999;
+  z-index: 1;
   width: 100%;
 }
 .loading {
@@ -69,6 +108,11 @@
   left: 50%;
   top: 50%;
   transform: translateX(-50%);
+}
+.loading span {
+  display: block;
+  padding-top: 10px;
+  color: var(--font-color-caption);
 }
 .videoWrapper {
   display: flex;
@@ -82,4 +126,24 @@ rt {
 
 .videoRadius {
   border-radius: 6px;
+}
+
+.my-drawer .am-drawer-sidebar {
+  background-color: #fff;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.my-drawer .am-drawer-sidebar .am-list {
+  width: 200px;
+  padding: 0;
+}
+.am-activity-indicator {
+  justify-content: center;
+}
+
+.am-button-small {
+  font-size: 13px!important;
+}
+.am-popover .am-popover-item-container {
+  height: 30px!important;
 }

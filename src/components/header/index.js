@@ -1,10 +1,9 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, withRouter } from "react-router-dom";
 import React from 'react'
-import { Layout, Icon } from 'antd';
 import Login from '../login'
-const { Header } = Layout;
+import { NavBar, Icon } from 'antd-mobile';
 
-const NewHeader = () => {
+const Header = (props) => {
   let location = useLocation();
 
   React.useEffect(() => {
@@ -12,25 +11,15 @@ const NewHeader = () => {
   }, [location]);
 
   return (
-    <Header>
-      {location.pathname !== '/' ? (
-        <Link
-          to={{ pathname: '/' }}
-        >
-          <Icon type="left" style={{ fontSize: '20px', color: 'white' }} />
-          <div style={{display: 'inline', float: 'right'}}>
-            <Login/>
-          </div>
-        </Link>
-      ) : <div style={{ color: 'white' }}>
-        ANN NEWS
-        <div style={{display: 'inline', float: 'right'}}>
-          <Login/>
-        </div>
-      </div>
-      }
-    </Header>
+    <NavBar
+      mode="dark"
+      icon={location.pathname === '/' ? <Icon key="1" type="ellipsis" /> : <Icon type="left" />}
+      onLeftClick={location.pathname === '/' ? props.openDock : () => props.history.push('/')}
+      rightContent={[
+        <Login key="0"/>
+      ]}
+    >ANN NEWS</NavBar>
   )
 }
 
-export default NewHeader
+export default withRouter(Header)

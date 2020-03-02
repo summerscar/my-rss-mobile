@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {message} from 'antd'
+import {Toast} from 'antd-mobile'
 let instance = axios.create()
 
 function isAuthenticated () {
@@ -22,7 +22,7 @@ instance.interceptors.response.use(response => {
   return response
 }, error => {
   if (error.response.status === 401) {
-    message.error('需要登录哦')
+    Toast.info('需要登录哦')
   }
   return Promise.reject(error)
 })

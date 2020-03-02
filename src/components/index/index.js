@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import { Spin, Button } from 'antd';
+import { Button, ActivityIndicator } from 'antd-mobile';
 import {useAuth} from 'react-use-auth'
 
 function App(props) {
@@ -24,7 +24,7 @@ function App(props) {
           <Link 
             className="link"
             to={{
-              pathname: "/video/" + item.title,
+              pathname: "/video/" + item.id,
               state: { data: item }
             }}
           >
@@ -34,12 +34,14 @@ function App(props) {
         </div>
       )}) : 
         isloading ? 
-          <div className="loading"><Spin tip="稍等一下哦" size="large"/></div> 
+          <div className="loading">
+            <ActivityIndicator size="large"/>
+            <span>稍等一下哦</span>
+          </div> 
           : null}
       {videos.length > 0 && (
-        <Button shape="round" block onClick={ isAuthenticated() ? props.more : login }>
-          更多 
-          {isloading && <Spin size="small" style={{paddingLeft: '0.5rem'}}/>}
+        <Button size="small" onClick={ isAuthenticated() ? props.more : login } loading={isloading}>
+          更多
         </Button>
       )}
     </div>

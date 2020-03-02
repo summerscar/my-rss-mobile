@@ -1,16 +1,12 @@
 import React from 'react'
-import {  Button } from 'antd';
+import { Button, ActivityIndicator } from 'antd-mobile';
 import { useAuth } from "react-use-auth";
 
 
 const Login = () => {
-  const { isAuthenticated, login, logout, authResult } = useAuth();
+  const { isAuthenticated, login, authResult } = useAuth();
   console.log('user: ', authResult)
 
-  function logoutAction() {
-    localStorage.removeItem('accessToken')
-    logout()
-  }
   
   if (isAuthenticated()) {
     return (
@@ -22,16 +18,10 @@ const Login = () => {
               <span style={{paddingRight: '0.5rem'}}>{authResult.idTokenPayload.name}</span>
           )
         }
-        <Button
-          size="small"
-          icon="poweroff"
-          loading={!authResult}
-          onClick={logoutAction}
-        >
-        </Button>
+        <ActivityIndicator animating={!authResult} />
       </div>);
   } else {
-    return <Button onClick={login}>登录</Button>;
+    return <Button onClick={login} size="small">登录</Button>;
   }
 };
 
