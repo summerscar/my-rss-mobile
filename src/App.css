@@ -94,6 +94,7 @@
 .contentWrapper {
   /* height: calc(100vh - 64px - 9 / 16 * 100vw); */
   overflow: auto;
+  flex: 1 0;
 }
 .link {
   color: #282c34;
