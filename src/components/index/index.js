@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Link, Route } from "react-router-dom";
 import { Button, ActivityIndicator } from 'antd-mobile';
 import {useAuth} from 'react-use-auth'
@@ -9,22 +9,25 @@ import Video from '../../components/video'
 function App(props) {
   const { isAuthenticated, login, userId } = useAuth();
   const {videos, isloading} = props
+  const videosRef =  useRef([])
 
   function watched (id, title) {
-    axios.post(`/api/auth/watched`, { id, userId, title})
-      .then(res => {
-        console.log(res)
-      }).catch(e => {
-        console.log(e)
-      })
-  }
 
+    videosRef.current.forEach(video => video.pause())
+    // axios.post(`/api/auth/watched`, { id, userId, title})
+    //   .then(res => {
+    //     console.log(res)
+    //   }).catch(e => {
+    //     console.log(e)
+    //   })
+  }
   return (
     <div className="homeWrapper">
       {videos.length ? videos.map((item, index) => {
         return (<div key={index} className="videoItem">
           <div>
             <video
+              ref={ref => videosRef.current[index] = ref}
               className="videoRadius"
               src={item.url} 
               width="100%" 
@@ -39,7 +42,7 @@ function App(props) {
               pathname: "/video/" + item.id,
               state: { data: item }
             }}
-            // onClick={() => watched(item.id, item.title)}
+            onClick={() => watched(item.id, item.title)}
           >
             {item.title}
             <div  style={{fontSize: '12px'}}>{dayjs(item.pubdate).format('YYYY/MM/DD HH:mm')}</div>

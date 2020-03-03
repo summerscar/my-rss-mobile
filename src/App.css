@@ -133,6 +133,7 @@ rt {
 
 .videoRadius {
   border-radius: 6px;
+  max-height: 200px;
 }
 
 .my-drawer .am-drawer-sidebar {
