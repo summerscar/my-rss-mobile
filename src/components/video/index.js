@@ -101,7 +101,8 @@ function Video(props) {
     </>
   );
 
-  return (videoData ?
+  return (
+    videoData ?
     (<div className="videoWrapper">
       <div>
         <video src={videoData.url} width="100%" controls={true} autoPlay={true}/>
@@ -138,6 +139,7 @@ function Video(props) {
         <div style={{paddingTop: '1rem'}}>{furigana || videoData.contentsnippet}</div>
         <div style={{paddingTop: '1rem'}}>{translation}</div>
       </div>
+      <div className="footer" style={{ textAlign: 'center' }}>ANN News by <a href="https://github.com/summerscar/my-rss-node">summerscar</a></div>
     </div>) : 
       <div className="videoWrapper">
         <div className="loading">
