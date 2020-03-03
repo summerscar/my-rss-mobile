@@ -92,7 +92,7 @@
   padding: 0 1rem;
 }
 .contentWrapper {
-  height: calc(100vh - 64px - 69px - 9 / 16 * 100vw);
+  /* height: calc(100vh - 64px - 9 / 16 * 100vw); */
   overflow: auto;
 }
 .link {
@@ -117,6 +117,13 @@
 .videoWrapper {
   display: flex;
   flex-direction: column;
+  position: fixed;
+  top: 45px;
+  background: #f0f2f5;
+  left: 0;
+  right: 0;
+  bottom: 0px;
+  z-index: 2;
 }
 
 rt {

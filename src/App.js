@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Index from './components/index';
-import Video from './components/video';
 import Likes from './page/likes'
 import { Route, Switch, withRouter } from "react-router-dom";
 import Header from './components/header'
@@ -75,14 +74,11 @@ function App(props) {
         </Drawer>
         <div className="indexWrapper">
           <Switch>
-            <Route exact path="/">
-              <Index videos={videos} more={() => setOffset(offset => offset + OFFSET)} isloading={isloading}/>
-            </Route>
-            <Route path="/video/:id">
-              <Video />
-            </Route>
             <Route path="/likes">
               <Likes />
+            </Route>
+            <Route path="/">
+              <Index videos={videos} more={() => setOffset(offset => offset + OFFSET)} isloading={isloading}/>
             </Route>
           </Switch>
         </div>

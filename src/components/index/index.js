@@ -1,9 +1,10 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 import { Button, ActivityIndicator } from 'antd-mobile';
 import {useAuth} from 'react-use-auth'
 import axios from './../../utils/requset'
 import dayjs from 'dayjs'
+import Video from '../../components/video'
 
 function App(props) {
   const { isAuthenticated, login, userId } = useAuth();
@@ -56,6 +57,9 @@ function App(props) {
           更多
         </Button>
       )}
+      <Route path="/video/:id">
+        <Video />
+      </Route>
     </div>
   );
 }

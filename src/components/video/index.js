@@ -138,11 +138,13 @@ function Video(props) {
         <div style={{paddingTop: '1rem'}}>{furigana || videoData.contentsnippet}</div>
         <div style={{paddingTop: '1rem'}}>{translation}</div>
       </div>
-    </div>) :  
-    <div className="loading">
-      <ActivityIndicator size="large"/>
-      <span>稍等一下哦</span>
+    </div>) : 
+      <div className="videoWrapper">
+        <div className="loading">
+          <ActivityIndicator size="large"/>
+        <span>稍等一下哦</span>
     </div>
+      </div>
   );
 }
 

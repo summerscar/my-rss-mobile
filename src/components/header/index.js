@@ -6,10 +6,6 @@ import { NavBar, Icon } from 'antd-mobile';
 const Header = (props) => {
   let location = useLocation();
 
-  React.useEffect(() => {
-    console.log(location)
-  }, [location]);
-
   return (
     <NavBar
       mode="dark"
