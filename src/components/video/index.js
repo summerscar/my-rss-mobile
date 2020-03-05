@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useRef} from 'react';
 import { Button, Popover, ActivityIndicator  } from 'antd-mobile';
 import axios from './../../utils/requset';
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, withRouter } from "react-router-dom";
 import { useAuth } from "react-use-auth";
 import dayjs from 'dayjs'
 import { AppContext } from '../../context';
@@ -10,17 +10,16 @@ const Item = Popover.Item;
 function Video(props) {
   const { user, setData } = useContext(AppContext);
 
-  let location = useLocation();
-  let [translation, setTranslation] = useState()
+  const location = useLocation();
+  const [translation, setTranslation] = useState()
   const { id } = useParams()
-  let [videoData, setVideoData] = useState(location.state && location.state.data)
-
-  let [isloading, setIsloading] = useState(false)
-  let [isAnotherloading, setIsAnotherloading] = useState(false)
-  let [isAnanotherloading, setIsAnanotherloading] = useState(false)
-  let [furigana, setFrigana] = useState()
-  let [visiable, setVisiable] = useState(false)
-  let { userId } = useAuth();
+  const [videoData, setVideoData] = useState(location.state && location.state.data)
+  const [isloading, setIsloading] = useState(false)
+  const [isAnotherloading, setIsAnotherloading] = useState(false)
+  const [isAnanotherloading, setIsAnanotherloading] = useState(false)
+  const [furigana, setFrigana] = useState()
+  const [visiable, setVisiable] = useState(false)
+  const { userId } = useAuth();
 
   let likes = user && 
       ((user['https://dev-ymyh-0n9:auth0:com/user_metadata'] && user['https://dev-ymyh-0n9:auth0:com/user_metadata'].likes) || 
@@ -37,15 +36,37 @@ function Video(props) {
         setIsloading(false)
       })
   }
+
+  const prevID = useRef(0)
   useEffect(() => {
+    if (prevID.current && prevID.current !== id) {
+      setTranslation('')
+      setVideoData(null)
+    }
+    prevID.current = id
+
     if (videoData) return
     axios.get(`/api/auth/videoSearch/${id}`)
       .then(res => {
         setVideoData(res.data)
+        console.log('setvodedata', videoData)
       }).catch(e => {
         console.log(e)
       })
-  }, [])
+  }, [videoData, id])
+
+  const videoRef = useRef()
+  useEffect(() => {
+    if (videoRef.current && localStorage.getItem('sequencePlay') === 'true') {
+      async function next () {
+        let {data} = await axios.post(`/api/auth/videoPrev`, { name: 'ANNnewsCH', isodate: videoData.isodate})
+        props.history.push(`/video/${data.id}`)
+      }
+      let video = videoRef.current
+      video.addEventListener('ended', next)
+      return () => video.removeEventListener('ended', next)
+    }
+  }, [videoData])
 
   function getfurigana (grade) {
     if (grade === '0') {
@@ -105,10 +126,10 @@ function Video(props) {
     videoData ?
     (<div className="videoWrapper">
       <div>
-        <video src={videoData.url} width="100%" controls={true} autoPlay={true}/>
+        <video ref={videoRef} src={videoData.url} width="100%" controls={true} autoPlay={true}/>
       </div>
       <div className="contentWrapper">
-        <div style={{fontSize: '14px', fontWeight: 'bold'}}>{videoData.title}</div>
+        <div style={{fontSize: '14px', fontWeight: 'bold', padding: '0.5rem 0'}}>{videoData.title}</div>
         <div style={{display: 'flex', justifyContent: 'space-between'}}>
           <div style={{display: 'flex'}}>
             <Button size="small" onClick={like} loading={isAnanotherloading} inline>
@@ -136,18 +157,18 @@ function Video(props) {
           </div>
           <div style={{fontSize: '12px', lineHeight: '30px'}}>{dayjs(videoData.pubdate).format('MM/DD HH:mm')}</div>
         </div>
-        <div style={{paddingTop: '1rem'}}>{furigana || videoData.contentsnippet}</div>
+        <div style={{paddingTop: '1rem', lineHeight: '1.5'}}>{furigana || videoData.contentsnippet}</div>
         <div style={{paddingTop: '1rem'}}>{translation}</div>
       </div>
       <div className="footer" style={{ textAlign: 'center' }}>ANN News by <a href="https://github.com/summerscar/my-rss-node">summerscar</a></div>
     </div>) : 
-      <div className="videoWrapper">
-        <div className="loading">
-          <ActivityIndicator size="large"/>
+    <div className="videoWrapper">
+      <div className="loading">
+        <ActivityIndicator size="large"/>
         <span>稍等一下哦</span>
-    </div>
       </div>
+    </div>
   );
 }
 
-export default Video;
+export default withRouter(Video);

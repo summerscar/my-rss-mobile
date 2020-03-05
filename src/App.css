@@ -34,7 +34,9 @@
   --font-color-link: #2964aa;
   --font-color-no: #e0e0e0;
 }
-
+a {
+  color: var(--ifm-color-primary);
+}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

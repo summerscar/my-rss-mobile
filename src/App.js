@@ -7,7 +7,7 @@ import Header from './components/header'
 import axios from './utils/requset';
 import AUTHCallback from "./page/AUTHCALLBACK";
 import {useAuth} from 'react-use-auth'
-import { Drawer, List } from 'antd-mobile';
+import { Drawer, List, Switch as AntSwitch } from 'antd-mobile';
 
 const OFFSET = 4
 
@@ -17,6 +17,7 @@ function App(props) {
   const [isloading, setIsloading] = useState(false)
   const { authResult, isAuthenticated, logout, login } = useAuth();
   const [docked, setDocked] = useState(false)
+  const [ sequencePlay, setSequencePlay ] = useState(localStorage.getItem('sequencePlay') === 'true')
 
   useEffect(() => {
     if (isAuthenticated()) {
@@ -53,6 +54,16 @@ function App(props) {
   const sidebar = (<List>
       {!(isAuthenticated()) && <List.Item onClick={login}>登录</List.Item>}
       <List.Item onClick={toLikes}>收藏夹</List.Item>
+      <List.Item
+          extra={<AntSwitch
+            color="#108ee9"
+            checked={sequencePlay}
+            onChange={() => {
+              setSequencePlay(!sequencePlay)
+              localStorage.setItem('sequencePlay', !sequencePlay)
+            }}
+          />}
+      >连续播放</List.Item>
       {
         isAuthenticated() && <List.Item onClick={logoutAction}>注销</List.Item> 
       }
