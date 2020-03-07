@@ -11,13 +11,13 @@ function Video(props) {
   const { user, setData } = useContext(AppContext);
 
   const location = useLocation();
-  const [translation, setTranslation] = useState()
+  const [translation, setTranslation] = useState('')
   const { id } = useParams()
   const [videoData, setVideoData] = useState(location.state && location.state.data)
   const [isloading, setIsloading] = useState(false)
   const [isAnotherloading, setIsAnotherloading] = useState(false)
   const [isAnanotherloading, setIsAnanotherloading] = useState(false)
-  const [furigana, setFrigana] = useState()
+  const [furigana, setFrigana] = useState('')
   const [visiable, setVisiable] = useState(false)
   const { userId } = useAuth();
 
@@ -41,6 +41,7 @@ function Video(props) {
   useEffect(() => {
     if (prevID.current && prevID.current !== id) {
       setTranslation('')
+      setFrigana('')
       setVideoData(null)
     }
     prevID.current = id
@@ -74,10 +75,11 @@ function Video(props) {
       return
     }
     setIsAnotherloading(true)
-    axios.post(`/api/auth/furigana`, { content: videoData.contentsnippet, grade })
+    axios.post(`/api/auth/furigana`, { content: videoData.contentsnippet.replace(/<br>/g, '\n'), grade })
       .then(res => {
         setFrigana(
           res.data.WordList.Word.map((item, index) => (
+            item.Surface._cdata ? '\n' :
             <ruby key={index}>
               {item.Surface._text}
               {item.Furigana ? (<><rp>(</rp><rt>{item.Furigana._text}</rt><rp>)</rp></>) : null}
@@ -157,8 +159,8 @@ function Video(props) {
           </div>
           <div style={{fontSize: '12px', lineHeight: '30px'}}>{dayjs(videoData.pubdate).format('MM/DD HH:mm')}</div>
         </div>
-        <div style={{paddingTop: '1rem', lineHeight: '1.5'}}>{furigana || videoData.contentsnippet}</div>
-        <div style={{paddingTop: '1rem'}}>{translation}</div>
+        <div style={{paddingTop: '1rem', lineHeight: '1.5', whiteSpace: 'pre-wrap'}}>{furigana || videoData.contentsnippet.replace(/<br>/g, '\n')}</div>
+        <div style={{paddingTop: '1rem', whiteSpace: 'pre-wrap', lineHeight: '1.3', color: 'rgb(58, 58, 58)'}}>{translation.replace(/<br><br>/g, '<br>').replace(/<br>/g, '\n')}</div>
       </div>
       <div className="footer" style={{ textAlign: 'center' }}>ANN News by <a href="https://github.com/summerscar/my-rss-node">summerscar</a></div>
     </div>) : 
