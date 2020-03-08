@@ -123,7 +123,7 @@ function Video(props) {
       <Item key="7">小学7年生</Item>
     </>
   );
-  const videoID = (new URL(videoData.link)).searchParams.get('v')
+
   return (
     videoData ?
     (<div className="videoWrapper">
@@ -131,7 +131,7 @@ function Video(props) {
         {!ytbPlayer && videoData.url ?
           <video ref={videoRef} src={videoData.url} width="100%" controls={true} autoPlay={true}/> :
           <iframe 
-            src={`https://www.youtube.com/embed/${videoID}`} 
+            src={`https://www.youtube.com/embed/${(new URL(videoData.link)).searchParams.get('v')}`} 
             style={{width: '100vw', height: 'calc(9 / 16 * 100vw)'}} 
             title={videoData.title} 
             frameBorder="0" 

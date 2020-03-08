@@ -144,7 +144,7 @@ rt {
   -webkit-overflow-scrolling: touch;
 }
 .my-drawer .am-drawer-sidebar .am-list {
-  width: 280px;
+  width: 250px;
   padding: 0;
 }
 .am-activity-indicator {
