@@ -8,7 +8,7 @@ import { AppContext } from '../../context';
 
 const Item = Popover.Item;
 function Video(props) {
-  const { user, setData } = useContext(AppContext);
+  const { user, ytbPlayer, channel, setData } = useContext(AppContext);
 
   const location = useLocation();
   const [translation, setTranslation] = useState('')
@@ -60,7 +60,7 @@ function Video(props) {
   useEffect(() => {
     if (videoRef.current && localStorage.getItem('sequencePlay') === 'true') {
       async function next () {
-        let {data} = await axios.post(`/api/auth/videoPrev`, { name: 'ANNnewsCH', isodate: videoData.isodate})
+        let {data} = await axios.post(`/api/auth/videoPrev`, { name: channel, isodate: videoData.isodate})
         props.history.push(`/video/${data.id}`)
       }
       let video = videoRef.current
@@ -123,12 +123,22 @@ function Video(props) {
       <Item key="7">小学7年生</Item>
     </>
   );
-
+  const videoID = (new URL(videoData.link)).searchParams.get('v')
   return (
     videoData ?
     (<div className="videoWrapper">
       <div>
-        <video ref={videoRef} src={videoData.url} width="100%" controls={true} autoPlay={true}/>
+        {!ytbPlayer && videoData.url ?
+          <video ref={videoRef} src={videoData.url} width="100%" controls={true} autoPlay={true}/> :
+          <iframe 
+            src={`https://www.youtube.com/embed/${videoID}`} 
+            style={{width: '100vw', height: 'calc(9 / 16 * 100vw)'}} 
+            title={videoData.title} 
+            frameBorder="0" 
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
+        }
       </div>
       <div className="contentWrapper">
         <div style={{fontSize: '14px', fontWeight: 'bold', padding: '0.5rem 0'}}>{videoData.title}</div>
@@ -162,7 +172,7 @@ function Video(props) {
         <div style={{paddingTop: '1rem', lineHeight: '1.5', whiteSpace: 'pre-wrap'}}>{furigana || videoData.contentsnippet.replace(/<br>/g, '\n')}</div>
         <div style={{paddingTop: '1rem', whiteSpace: 'pre-wrap', lineHeight: '1.3', color: 'rgb(58, 58, 58)'}}>{translation.replace(/<br><br>/g, '<br>').replace(/<br>/g, '\n')}</div>
       </div>
-      <div className="footer" style={{ textAlign: 'center' }}>ANN News by <a href="https://github.com/summerscar/my-rss-node">summerscar</a></div>
+      <div className="footer" style={{ textAlign: 'center' }}>News by <a href="https://github.com/summerscar/my-rss-node">summerscar</a></div>
     </div>) : 
     <div className="videoWrapper">
       <div className="loading">

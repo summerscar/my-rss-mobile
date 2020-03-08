@@ -1,15 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import { Link, Route } from "react-router-dom";
 import { Button, ActivityIndicator } from 'antd-mobile';
 import {useAuth} from 'react-use-auth'
-import axios from './../../utils/requset'
 import dayjs from 'dayjs'
 import Video from '../../components/video'
+import { AppContext } from '../../context/index';
 
 function App(props) {
-  const { isAuthenticated, login, userId } = useAuth();
+  const { isAuthenticated, login } = useAuth();
   const {videos, isloading} = props
   const videosRef =  useRef([])
+  const { channel } = useContext(AppContext)
 
   function watched (id, title) {
 
@@ -32,8 +33,8 @@ function App(props) {
               src={item.url} 
               width="100%" 
               controls={true} 
-              preload={index === 0 ? 'auto' : 'none'}
-              poster={'/annnews.jpg'}
+              preload={'none'}
+              poster={`image/${channel}.jpg`}
             />
           </div>
           <Link 

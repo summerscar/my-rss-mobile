@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './App.css';
 import Index from './components/index';
 import Likes from './page/likes'
@@ -7,7 +7,8 @@ import Header from './components/header'
 import axios from './utils/requset';
 import AUTHCallback from "./page/AUTHCALLBACK";
 import {useAuth} from 'react-use-auth'
-import { Drawer, List, Switch as AntSwitch } from 'antd-mobile';
+import { Drawer, List, Switch as AntSwitch, Picker } from 'antd-mobile';
+import { AppContext } from '../src/context';
 
 const OFFSET = 4
 
@@ -18,11 +19,11 @@ function App(props) {
   const { authResult, isAuthenticated, logout, login } = useAuth();
   const [docked, setDocked] = useState(false)
   const [ sequencePlay, setSequencePlay ] = useState(localStorage.getItem('sequencePlay') === 'true')
-
+  const { ytbPlayer, setData, channels, channel } = useContext(AppContext)
   useEffect(() => {
     if (isAuthenticated()) {
       setIsloading(true)
-      axios.get(`/api/auth/youtube/ANNnewsCH?offset=${offset}`).then(res => {
+      axios.get(`/api/auth/youtube/${channel}?offset=${offset}`).then(res => {
         console.log(res.data)
         setVideos(videos => [...videos, ...res.data.items])
         setIsloading(false)
@@ -30,14 +31,14 @@ function App(props) {
     } else {
       if (!authResult) {
         setIsloading(true)
-        axios.get(`/api/youtube/ANNnewsCH`).then(res => {
+        axios.get(`/api/youtube/${channel}`).then(res => {
           console.log(res.data)
           setVideos(res.data.items)
           setIsloading(false)
         })
       } 
     }
-  }, [offset])
+  }, [offset, channel])
 
   useEffect(() => {
     authResult && localStorage.setItem('accessToken', authResult.accessToken)
@@ -64,6 +65,29 @@ function App(props) {
             }}
           />}
       >连续播放</List.Item>
+      <List.Item
+        extra={<AntSwitch
+          color="#108ee9"
+          checked={ytbPlayer}
+          onChange={() => {
+            setData('ytbPlayer', !ytbPlayer)
+            localStorage.setItem('ytbPlayer', !ytbPlayer)
+          }}
+        />}
+      >Youtube播放器</List.Item>
+      <Picker 
+        data={channels} 
+        cols={1} 
+        value={[channel]} 
+        onChange={(value) => {
+          value = value[0]
+          setData('channel', value)
+          localStorage.setItem('channel', value)
+          setVideos([])
+        }}
+      >
+        <List.Item arrow="horizontal">切换频道</List.Item>
+      </Picker>
       {
         isAuthenticated() && <List.Item onClick={logoutAction}>注销</List.Item> 
       }
@@ -93,7 +117,7 @@ function App(props) {
             </Route>
           </Switch>
         </div>
-        <div className="footer" style={{ textAlign: 'center' }}>ANN News by <a href="https://github.com/summerscar/my-rss-node">summerscar</a></div>
+        <div className="footer" style={{ textAlign: 'center' }}>News by <a href="https://github.com/summerscar/my-rss-node">summerscar</a></div>
       </div>
       <Route path="/auth0_callback" component={AUTHCallback} />
     </>  

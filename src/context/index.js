@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 export const AppContext = React.createContext({});
 
-export const AppContextProvider = ({ children }: any) => {
+export const AppContextProvider = ({ children }) => {
   // 修改状态
   const setData = (name, data) => {
     setState(prevState => {
@@ -17,6 +17,10 @@ export const AppContextProvider = ({ children }: any) => {
 
   const initAppState = {
     root: { text: 'hello context'},
+    user: null,
+    ytbPlayer: localStorage.getItem('ytbPlayer') === 'true' || false,
+    channels: [{value: 'ANNnewsCH', label: 'ANN NEWS'}, {value: 'maidigitv', label: 'MAiDiGiTV'}],
+    channel: localStorage.getItem('channel') || 'ANNnewsCH',
     setData,
     addStore,
   };
