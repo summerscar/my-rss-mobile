@@ -84,6 +84,7 @@ function App(props) {
           setData('channel', value)
           localStorage.setItem('channel', value)
           setVideos([])
+          setOffset(0)
         }}
       >
         <List.Item arrow="horizontal">切换频道</List.Item>
