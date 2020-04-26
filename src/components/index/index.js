@@ -30,14 +30,14 @@ function App(props) {
             <video
               ref={ref => videosRef.current[index] = ref}
               className="videoRadius"
-              src={item.url} 
-              width="100%" 
-              controls={true} 
+              src={item.url}
+              width="100%"
+              controls={true}
               preload={'none'}
               poster={`image/${channel}.jpg`}
             />
           </div>
-          <Link 
+          <Link
             className="link"
             to={{
               pathname: "/video/" + item.id,
@@ -49,12 +49,12 @@ function App(props) {
             <div  style={{fontSize: '12px'}}>{dayjs(item.pubdate).format('YYYY/MM/DD HH:mm')}</div>
           </Link>
         </div>
-      )}) : 
-        isloading ? 
+      )}) :
+        isloading ?
           <div className="loading">
             <ActivityIndicator size="large"/>
             <span>稍等一下哦</span>
-          </div> 
+          </div>
           : null}
       {videos.length > 0 && (
         <Button size="small" onClick={ isAuthenticated() ? props.more : login } loading={isloading}>
@@ -62,7 +62,7 @@ function App(props) {
         </Button>
       )}
       <Route path="/video/:id">
-        <Video />
+        <Video videos={videos} more={props.more}/>
       </Route>
     </div>
   );
