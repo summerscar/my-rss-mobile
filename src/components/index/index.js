@@ -34,7 +34,7 @@ function App(props) {
               width="100%"
               controls={true}
               preload={'none'}
-              poster={`image/${channel}.jpg`}
+              poster={`/image/${channel}.jpg`}
             />
           </div>
           <Link
