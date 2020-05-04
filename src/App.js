@@ -9,6 +9,7 @@ import AUTHCallback from "./page/AUTHCALLBACK";
 import {useAuth} from 'react-use-auth'
 import { Drawer, List, Switch as AntSwitch, Picker } from 'antd-mobile';
 import { AppContext } from '../src/context';
+import { fixVideoUrl } from './utils/index'
 
 const OFFSET = 4
 
@@ -24,6 +25,7 @@ function App(props) {
     if (isAuthenticated()) {
       setIsloading(true)
       axios.get(`/api/auth/youtube/${channel}?offset=${offset}`).then(res => {
+        res.data.items = res.data.items.map(video => fixVideoUrl(video))
         console.log(res.data)
         setVideos(videos => [...videos, ...res.data.items])
         setIsloading(false)
@@ -36,7 +38,7 @@ function App(props) {
           setVideos(res.data.items)
           setIsloading(false)
         })
-      } 
+      }
     }
   }, [offset, channel])
 
@@ -75,10 +77,10 @@ function App(props) {
           }}
         />}
       >Youtube播放器</List.Item>
-      <Picker 
-        data={channels} 
-        cols={1} 
-        value={[channel]} 
+      <Picker
+        data={channels}
+        cols={1}
+        value={[channel]}
         onChange={(value) => {
           value = value[0]
           setData('channel', value)
@@ -90,10 +92,10 @@ function App(props) {
         <List.Item arrow="horizontal">切换频道</List.Item>
       </Picker>
       {
-        isAuthenticated() && <List.Item onClick={logoutAction}>注销</List.Item> 
+        isAuthenticated() && <List.Item onClick={logoutAction}>注销</List.Item>
       }
   </List>);
-  
+
   return (
     <>
       <div className="layout">
@@ -121,7 +123,7 @@ function App(props) {
         <div className="footer" style={{ textAlign: 'center' }}>News by <a href="https://github.com/summerscar/my-rss-node">summerscar</a></div>
       </div>
       <Route path="/auth0_callback" component={AUTHCallback} />
-    </>  
+    </>
   );
 }
 

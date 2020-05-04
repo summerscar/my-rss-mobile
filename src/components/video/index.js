@@ -5,6 +5,7 @@ import { useLocation, useParams, withRouter, Link } from "react-router-dom";
 import { useAuth } from "react-use-auth";
 import dayjs from 'dayjs'
 import { AppContext } from '../../context';
+import { fixVideoUrl } from '../../utils/index'
 
 const Item = Popover.Item;
 function Video({ videos, ...props }) {
@@ -50,6 +51,7 @@ function Video({ videos, ...props }) {
     if (videoData) return
     axios.get(`/api/auth/videoSearch/${id}`)
       .then(res => {
+        res.data = fixVideoUrl(res.data)
         setVideoData(res.data)
         console.log('setvodedata', videoData)
       }).catch(e => {
